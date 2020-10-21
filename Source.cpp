@@ -1,20 +1,40 @@
 #include <iostream>
 #include <conio.h>
 #include <time.h>
+#include <stack>
 
 using namespace std;
-int i, j, m;
+int i, j, m, n;
 bool* visited = new bool[m];
 int** graph;
+stack <int> s;
 
 void DFS(int st)
 {
 	int r;
 	printf("%d ", st + 1);
-	visited[st] = true; //вершина посещена
+	visited[st] = true;
 	for (r = 0; r <= m; r++)
-		if ((graph[st][r] != 0) && (!visited[r]))
+		if ((!graph[st][r]) && (!visited[r]))
 			DFS(r);
+}
+
+void DFS_1(int st) {
+	visited[st] = true;
+	printf("%d ", st + 1);
+	s.push(st);
+		int v;
+		while (!s.empty()) {
+			v = s.top();
+			s.pop();
+			for (i = 0; i < m; i++) {
+				if ((!graph[v][i]) && (!visited[i])) {
+					printf("%d ", i+1);
+					s.push(i);
+					visited[i] = 1;
+				}
+			}
+		}
 }
 
 void DFS_main()
@@ -22,7 +42,7 @@ void DFS_main()
 	setlocale(LC_ALL, "Rus");
 	printf("Введите количество вершин графа: ");
 	scanf_s("%d", &m);
-
+	n = m;
 	graph = new int* [m];
 	for (int i = 0; i < m; i++) {
 		graph[i] = new int[m];
@@ -64,10 +84,13 @@ void DFS_main()
 		scanf_s("%d", &start);
 	}
 
-	bool* vis = new bool[m];
-	printf("Порядок обхода: ");
+	printf("Порядок обхода (не рекурсивный): ");
+	DFS_1(start - 1);
+	for (i = 0; i < m; i++) {
+		visited[i] = 0;
+	}
+	printf("\nПорядок обхода (рекурсивный): ");
 	DFS(start - 1);
-
 	_getch();
 }
 
